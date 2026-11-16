@@ -1,0 +1,11 @@
+@extends('layouts.app')
+@section('title',$item->exists?'Edit Ekstrakurikuler':'Tambah Ekstrakurikuler')@section('section','Ekstrakurikuler')
+@section('content')
+<div class="page-head"><div><div class="eyebrow">KEGIATAN SEKOLAH</div><h1>{{ $item->exists?'Edit ekstrakurikuler':'Tambah ekstrakurikuler' }}</h1><p>Lengkapi informasi kegiatan di bawah ini.</p></div></div>
+<form class="form-card" method="POST" action="{{ $item->exists?route('ekskul.update',$item):route('ekskul.store') }}">@csrf @if($item->exists)@method('PUT')@endif
+<div class="form-grid"><div class="field full"><label for="nama_ekskul">Nama ekstrakurikuler</label><input id="nama_ekskul" name="nama_ekskul" value="{{ old('nama_ekskul',$item->nama_ekskul) }}" placeholder="Contoh: Klub Fotografi" required>@error('nama_ekskul')<span class="error">{{ $message }}</span>@enderror</div>
+<div class="field full"><label for="pembina_id">Pembina</label><select name="pembina_id" id="pembina_id" required><option value="">Pilih pembina</option>@foreach($pembinaList as $pembina)<option value="{{ $pembina->id }}" @selected(old('pembina_id',$item->pembina_id)==$pembina->id)>{{ $pembina->nama }} · {{ $pembina->keahlian }}</option>@endforeach</select>@error('pembina_id')<span class="error">{{ $message }}</span>@enderror @if($pembinaList->isEmpty())<span class="muted">Tambahkan data pembina terlebih dahulu melalui menu Data Pembina.</span>@endif</div>
+<div class="field"><label for="hari_latihan">Hari latihan</label><select name="hari_latihan" id="hari_latihan" required><option value="">Pilih hari</option>@foreach(['Senin','Selasa','Rabu','Kamis','Jumat','Sabtu','Minggu'] as $hari)<option @selected(old('hari_latihan',$item->hari_latihan)==$hari)>{{ $hari }}</option>@endforeach</select>@error('hari_latihan')<span class="error">{{ $message }}</span>@enderror</div>
+<div class="field"><label for="kuota">Kuota peserta</label><input type="number" min="1" id="kuota" name="kuota" value="{{ old('kuota',$item->kuota) }}" placeholder="30" required>@error('kuota')<span class="error">{{ $message }}</span>@enderror</div></div>
+<div class="form-actions"><a class="btn btn-light" href="{{ route('ekskul.index') }}">Batal</a><button class="btn btn-primary">{{ $item->exists?'Simpan perubahan':'Simpan ekskul' }}</button></div></form>
+@endsection
